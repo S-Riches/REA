@@ -3,6 +3,8 @@
 #include <string>
 #include <fstream>
 #include <ctime>
+#include <map>
+#include <array>
 
 /*
   in this file for the minimumm viable product we need to
@@ -11,6 +13,8 @@
 */
 
 std::vector<std::string> names;
+
+char convertToDec(std::string line);
 
 std::string privateKeyGenerator(int length)
 {
@@ -36,6 +40,11 @@ std::string privateKeyGenerator(int length)
   }
 }
 
+int convPrivKey(std::string outString)
+{
+  convertToDec(outString);
+}
+
 void fileInput()
 {
   // gets file location input and attempts to open
@@ -43,11 +52,6 @@ void fileInput()
   std::cout << "Please input your file that you wish to encrypt : ";
   std::cin >> fileLocation;
   std::fstream fileOpener(fileLocation, std::ios::in);
-  if(fileOpener.is_open())
-  {
-    // we load the lines here line by line, shifting them by the amount of the random private
-  }
-
 }
 
 /*
@@ -59,6 +63,16 @@ void fileInput()
 
    and then we will be able to re use this block of code
 */
+
+char convertToDec(std::string line)
+{
+  int temp;
+  for(int i = 0; i < line.size(); i++)
+  {
+    temp = static_cast<int>(line.at(i));
+    std::cout << temp << std::endl;
+  }
+}
 
 
 
