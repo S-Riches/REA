@@ -1,0 +1,7 @@
+the quick
+brown
+dog jumps over
+the lazy
+fox
+foo bar
+bar foo

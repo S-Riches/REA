@@ -14,7 +14,5 @@
   implement the shift and then go from there
 */
 
-char convertToDec(std::string line);
 int convertToDecSum(std::string line);
-int convPrivKey(std::string outstring);
-void encryptWord(std::string line, int keyAmount);
+std::string encryptWord(std::string line, int keyAmount);
