@@ -1,3 +1,10 @@
+/*
+   PROGRAM TITLE : ENCRYPTION PROGRAM;
+   we split the file into lines, reading each char in the line, and storing in an array
+   then we check if the index of the array for each is divisiable by 2, if true we do
+   a modulus of the key value, and either subtract the remainder (+32 to the value to keep the chars visible) or add it to change the value.
+*/
+
 #include <iostream>
 #include "decs.h"
 
@@ -48,12 +55,6 @@ std::string fileInput(int val)
   return fileLocation;
 }
 
-/*
-   ENCRYPTION FUNCTION:
-   we split the file into lines, reading each char in the line, and storing in an array
-   then we check if the index of the array for each is divisiable by 2, if true we do
-   a modulus of the key value, and either subtract the remainder (+32 to the value to keep the chars visible) or add it to change the value.
-*/
 
 std::string encryptFunc(std::string line, int keyAmount)
 {
@@ -62,7 +63,7 @@ std::string encryptFunc(std::string line, int keyAmount)
   // make line to char array
   charToString = line.c_str();
   // for each element in the array
-  int shiftAmount = (keyAmount % 128); 
+  int shiftAmount = (keyAmount % 128 + 33); 
   for(int i = 0; i < charToString.length(); i++)
   {
     int tempVal;
@@ -77,7 +78,7 @@ std::string encryptFunc(std::string line, int keyAmount)
       }
       else
       {
-        int tempMod = ((shiftAmount + tempVal) % 128) + 32;
+        int tempMod = ((shiftAmount + tempVal) % 128) + 33;
         charToString.at(i) = static_cast<char>(tempMod);
       }
       std::cout << "new value is : " << charToString.at(i) << "\n" << std::endl;
@@ -93,7 +94,7 @@ std::string encryptFunc(std::string line, int keyAmount)
       }
       else
       {
-        int tempMod = ((shiftAmount - tempVal) % 128 + 32);
+        int tempMod = ((shiftAmount - tempVal) % 128 + 33);
         charToString.at(i) = static_cast<char>(tempMod);
       }
       std::cout << "new value is : " << charToString.at(i) << std::endl << "\n";
@@ -105,19 +106,6 @@ std::string encryptFunc(std::string line, int keyAmount)
   std::string outStr(charToString);
   std::cout << "the string is now : " << outStr << std::endl;
   return outStr;
-}
-
-// converts strings to decimal then sums them (used for the private key)
-int convertToDecSum(std::string line)
-{
-  int temp;
-  int out;
-  for(int i = 0; i < line.size(); i++)
-  {
-    temp = static_cast<int>(line.at(i));
-    out += temp;
-  }
-  return out;
 }
 
 void outFile(int val, std::string fileName)
@@ -152,6 +140,7 @@ void outFile(int val, std::string fileName)
 int main()
 {
   // main running code
+  std::cout << "please make sure you save the private key at the bottom to decrypt the file" << std::endl;
   std::string key = privateKeyGenerator(4);
   int val = convertToDecSum(key);
   // store file name after input
