@@ -30,7 +30,7 @@ std::string privateKeyGenerator(int length)
   }
 }
 
-void fileInput(int val)
+std::string fileInput(int val)
 {
   // gets file location input and attempts to open
   std::string tempLine;
@@ -45,6 +45,7 @@ void fileInput(int val)
       tempHolder.push_back(tempLine);
     } 
   }
+  return fileLocation;
 }
 
 /*
@@ -69,7 +70,7 @@ std::string encryptFunc(std::string line, int keyAmount)
     tempVal = static_cast<int>(charToString.at(i));
     if(i % 2 == 0)
     {
-      std::cout << charToString.at(i) <<" is even" << std::endl; 
+      std::cout << "[" << charToString.at(i) <<"] is even\n" << std::endl; 
       if(shiftAmount + tempVal < 128)
       {
         charToString.at(i) = static_cast<char>(shiftAmount + tempVal);
@@ -79,13 +80,13 @@ std::string encryptFunc(std::string line, int keyAmount)
         int tempMod = ((shiftAmount + tempVal) % 128) + 32;
         charToString.at(i) = static_cast<char>(tempMod);
       }
-      std::cout << "\nnew value is : " << charToString.at(i) << std::endl << "\n";
+      std::cout << "new value is : " << charToString.at(i) << "\n" << std::endl;
       // add
     }
 
     else
     {
-      std::cout << charToString.at(i) << " is odd" << std::endl; 
+      std::cout << "[" << charToString.at(i) << "] is odd\n" << std::endl; 
       if(shiftAmount + tempVal < 128)
       {
         charToString.at(i) = static_cast<char>(shiftAmount-tempVal);
@@ -95,16 +96,18 @@ std::string encryptFunc(std::string line, int keyAmount)
         int tempMod = ((shiftAmount - tempVal) % 128 + 32);
         charToString.at(i) = static_cast<char>(tempMod);
       }
-      std::cout << "\nnew value is : " << charToString.at(i) << std::endl << "\n";
+      std::cout << "new value is : " << charToString.at(i) << std::endl << "\n";
       //sub
     }
   }
+  // debug text + outputs encrypted string
   std::cout << "the string was : " << line << std::endl;
   std::string outStr(charToString);
   std::cout << "the string is now : " << outStr << std::endl;
   return outStr;
 }
 
+// converts strings to decimal then sums them (used for the private key)
 int convertToDecSum(std::string line)
 {
   int temp;
@@ -117,18 +120,46 @@ int convertToDecSum(std::string line)
   return out;
 }
 
+void outFile(int val, std::string fileName)
+{
+  std::string pushingString;
+  std::vector<std::string> outFile;
+  for(int i = 0; i < tempHolder.size(); i++)
+  {
+     pushingString = encryptFunc(tempHolder.at(i), val);
+     outFile.push_back(pushingString);
+  }
+  std::remove(fileName.c_str());
+  std::fstream newFile (fileName);
+  // ios out refers the file for output functions
+  newFile.open(fileName, std::ios::out);
+  if(newFile.is_open())
+  {
+    for(int i = 0; i < outFile.size(); i++)
+    {
+      // debug : std::cout << outFile.at(i) << std::endl;
+      newFile << outFile.at(i) << std::endl;
+
+    }
+    newFile.close();
+  }
+  else
+  {
+    std::cout << "Error occured when creating file?" << std::endl;
+  }
+}
+
 int main()
 {
   // main running code
   std::string key = privateKeyGenerator(4);
   int val = convertToDecSum(key);
-  fileInput(val);
-  std::cout << "Your private key is : " << key << std::endl;
-
-  for(int i = 0; i < tempHolder.size(); i++)
-  {
-    std::cout << encryptFunc(tempHolder.at(i), val);
-    
-  }
+  // store file name after input
+  std::string fileloc = fileInput(val);
+  //shows private key
+  std::cout << "\nYour private key is : " << key << std::endl;
+  // run encryption
+  outFile(val, fileloc);
+  
   return 0;
 }

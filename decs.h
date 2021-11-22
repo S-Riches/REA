@@ -7,6 +7,7 @@
 #include <ctime>
 #include <map>
 #include <array>
+#include <cstdio>
 
 /*
   in this file for the minimumm viable product we need to
