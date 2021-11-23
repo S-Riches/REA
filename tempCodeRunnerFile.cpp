@@ -1,1 +1,0 @@
-void encryptWord(std::string line, int keyAmount)
