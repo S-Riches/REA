@@ -30,12 +30,35 @@ void decryptLoop(std::string privateKey, std::string fileLoc)
             std::cout << decryptVec.at(i) << std::endl;
         }
     }
+    for(int i = 0; i < decryptVec.size(); i++)
+    {
+        decryptLine(decryptVec.at(i), privateKey);
+    }
 }
 
-char decryptLine(std::string line)
+std::string decryptLine(std::string line, std::string privateKey)
 {
-    std::string test = line.c_str();
-    
+    std::string charArray = line.c_str();
+    // write the decryption algorithm when my brain isnt completley fried
+    for(int i = 0; i < charArray.length(); i++)
+    {
+        int tempVal = static_cast<int>(charArray.at(i));
+        // get the shift value from the private key
+        int shiftAmount = (((convertToDecSum(privateKey)) % 128) + 33);
+        if(i % 2 == 0)
+        {
+            if(shiftAmount + tempVal < 128)
+            {
+                charArray.at(i) = static_cast<char>(shiftAmount - tempVal);
+            }
+            //add
+        }
+        else
+        {
+            //sub
+        }
+        std::cout << charArray.at(i) << std::endl;
+    }
 }
 
 int main()

@@ -18,6 +18,7 @@
 
 int convertToDecSum(std::string line);
 std::string encryptWord(std::string line, int keyAmount);
+std::string decryptLine(std::string line, std::string privateKey);
 
 // converts strings to decimal then sums them (used for the private key)
 int convertToDecSum(std::string line)

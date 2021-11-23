@@ -2,7 +2,7 @@
    PROGRAM TITLE : ENCRYPTION PROGRAM;
    we split the file into lines, reading each char in the line, and storing in an array
    then we check if the index of the array for each is divisiable by 2, if true we do
-   a modulus of the key value, and either subtract the remainder (+32 to the value to keep the chars visible) or add it to change the value.
+   a modulus of the key value, and either subtract the remainder or add it to change the value.
 */
 
 #include <iostream>
@@ -33,8 +33,8 @@ std::string privateKeyGenerator(int length)
       outString.append(temp);
     }
     nameFile.close();
-    return outString;
   }
+  return outString;
 }
 
 std::string fileInput(int val)
@@ -58,54 +58,60 @@ std::string fileInput(int val)
 
 std::string encryptFunc(std::string line, int keyAmount)
 {
-  // each line
+  // needed to redesign how the encryption works
   std::string charToString;
-  // make line to char array
   charToString = line.c_str();
-  // for each element in the array
-  int shiftAmount = (keyAmount % 128 + 33); 
   for(int i = 0; i < charToString.length(); i++)
   {
-    int tempVal;
-    // convert to dec
-    tempVal = static_cast<int>(charToString.at(i));
+    int tempVal = static_cast<int>(charToString.at(i));
     if(i % 2 == 0)
     {
-      std::cout << "[" << charToString.at(i) <<"] is even\n" << std::endl; 
-      if(shiftAmount + tempVal < 128)
-      {
-        charToString.at(i) = static_cast<char>(shiftAmount + tempVal);
-      }
-      else
-      {
-        int tempMod = ((shiftAmount + tempVal) % 128) + 33;
-        charToString.at(i) = static_cast<char>(tempMod);
-      }
-      std::cout << "new value is : " << charToString.at(i) << "\n" << std::endl;
-      // add
-    }
 
+      // we do 126 as 127 is ascii for delete
+      // shift forward down the ring of chars
+      if(tempVal < 126 && tempVal > 31) 
+      {
+        int newAsciiVal = tempVal + (keyAmount % 126);
+        if(newAsciiVal > 126)
+        {
+          int tempFix;
+          tempFix = newAsciiVal % 126;
+          newAsciiVal = 31 + tempFix;
+        }
+        std::cout << newAsciiVal << std::endl;
+        charToString.at(i) = static_cast<char>(newAsciiVal);
+        // need to output this to a return string
+      }
+    }
     else
     {
-      std::cout << "[" << charToString.at(i) << "] is odd\n" << std::endl; 
-      if(shiftAmount + tempVal < 128)
+      if(tempVal < 126 && tempVal > 31)
       {
-        charToString.at(i) = static_cast<char>(shiftAmount-tempVal);
+        int newAsciiVal = tempVal - (keyAmount % 126);
+        if(newAsciiVal < 31)
+        {
+          if(newAsciiVal < 0)
+          {
+            newAsciiVal = 126 + newAsciiVal;
+          }
+          else
+          {
+            newAsciiVal = 126 - newAsciiVal;
+          }
+          std::cout << newAsciiVal << std::endl;
+        }
+        else
+        {
+          std::cout << newAsciiVal << std::endl;
+          charToString.at(i) = static_cast<char>(newAsciiVal);
+        }
       }
-      else
-      {
-        int tempMod = ((shiftAmount - tempVal) % 128 + 33);
-        charToString.at(i) = static_cast<char>(tempMod);
-      }
-      std::cout << "new value is : " << charToString.at(i) << std::endl << "\n";
-      //sub
+      // shift backward down the ring of chars
+
     }
   }
-  // debug text + outputs encrypted string
-  std::cout << "the string was : " << line << std::endl;
-  std::string outStr(charToString);
-  std::cout << "the string is now : " << outStr << std::endl;
-  return outStr;
+  std::string out(charToString);
+  return out;
 }
 
 void outFile(int val, std::string fileName)
