@@ -44,18 +44,23 @@ std::string decryptLine(std::string line, std::string privateKey)
     {
         int tempVal = static_cast<int>(charArray.at(i));
         // get the shift value from the private key
-        int shiftAmount = (((convertToDecSum(privateKey)) % 128) + 33);
+        int shiftAmount = ((convertToDecSum(privateKey)) % 126);
         if(i % 2 == 0)
         {
-            if(shiftAmount + tempVal < 128)
+            if(shiftAmount + tempVal < 126 && shiftAmount + tempVal > 31)
             {
-                charArray.at(i) = static_cast<char>(shiftAmount - tempVal);
+                charArray.at(i) = static_cast<char>(shiftAmount - tempVal); 
             }
-            //add
+            else 
+            {
+
+
+            }
+            //added shift needs to be subtracted
         }
         else
         {
-            //sub
+            //sub NEEDS ADDITION
         }
         std::cout << charArray.at(i) << std::endl;
     }

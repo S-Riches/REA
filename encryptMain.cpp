@@ -85,6 +85,7 @@ std::string encryptFunc(std::string line, int keyAmount)
     }
     else
     {
+      // need to evaluate this because the second element doesnt always encrypt, probably something to do with the indexing check
       if(tempVal < 126 && tempVal > 31)
       {
         int newAsciiVal = tempVal - (keyAmount % 126);
